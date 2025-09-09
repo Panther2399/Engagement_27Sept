@@ -1,103 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engagement Invitation</title>
-    <style>
-        /* Full-screen styling for the invitation */
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f3ede4; /* Default background color */
-            transition: background-color 0.5s ease; /* Smooth transition for background color */
-        }
-        
-        /* Full-screen container for the images */
-        .image-slider {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engagement Invitation</title>
+  <style>
+    /* Full-screen styling */
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f3ede4;
+    }
+    
+    /* Image slider container */
+    .image-slider {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        /* Styling each image to fit the container without cropping */
-        .image-slider img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: opacity 0.7s ease;
-            opacity: 0;
-        }
+    /* Blurred background layer */
+    .image-slider::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      filter: blur(30px) brightness(0.9);
+      transform: scale(1.1); /* slight zoom so edges don't show */
+      z-index: 0;
+      transition: background-image 0.5s ease;
+    }
 
-        /* Show the first image initially */
-        .image-slider img.active {
-            opacity: 1;
-        }
-    </style>
+    /* Foreground images */
+    .image-slider img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* preserve full image */
+      transition: opacity 0.7s ease;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    /* Active image visible */
+    .image-slider img.active {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Image Slider -->
-    <div class="image-slider" id="slider">
-        <img src="1.png" alt="Wedding Invitation - First" class="active" data-bgcolor="#f4faf4" id="celebrateBtn">
-        <img src="2.png" alt="Wedding Invitation - Second" data-bgcolor="#f4faf4" id="celebrateBtn">
-        <img src="3.png" alt="Wedding Invitation - Third" data-bgcolor="#f4faf4" id="celebrateBtn">
-    </div>
+  <!-- Image Slider -->
+  <div class="image-slider" id="slider">
+    <img src="1.png" alt="Wedding Invitation - First" class="active">
+    <img src="2.png" alt="Wedding Invitation - Second">
+    <img src="3.png" alt="Wedding Invitation - Third">
+  </div>
 
-    <!-- Background Music -->
-    <audio id="background-music" src="path-to-your-music.mp3" autoplay loop></audio>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script>
-        // JavaScript to handle left/right click navigation in the slider
-const slider = document.getElementById('slider');
-const images = slider.querySelectorAll('img');
-let currentIndex = 0;
+  <!-- Background Music -->
+  <audio id="background-music" src="path-to-your-music.mp3" autoplay loop></audio>
 
-slider.addEventListener('click', (event) => {
-    const sliderWidth = slider.offsetWidth;
-    const clickX = event.offsetX; // X position where user clicked
+  <!-- Confetti JS -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    const slider = document.getElementById('slider');
+    const images = slider.querySelectorAll('img');
+    let currentIndex = 0;
 
-    // Hide current image
-    images[currentIndex].classList.remove('active');
-
-    if (clickX > sliderWidth / 2) {
-        // Clicked on the right half → Next image
-        if (currentIndex < images.length - 1) {
-            currentIndex++;
-        }
-    } else {
-        // Clicked on the left half → Previous image
-        if (currentIndex > 0) {
-            currentIndex--;
-        }
+    // function to update blurred background
+    function updateBackground() {
+      slider.style.setProperty("--bg", `url(${images[currentIndex].src})`);
+      slider.style.setProperty("--bg-image", `url(${images[currentIndex].src})`);
+      slider.style.backgroundImage = `url(${images[currentIndex].src})`;
+      slider.style.setProperty("--background-image", `url(${images[currentIndex].src})`);
+      slider.style.setProperty("--blur-img", `url(${images[currentIndex].src})`);
+      slider.style.setProperty("--blur-image", `url(${images[currentIndex].src})`);
+      slider.style.setProperty("--bgimg", `url(${images[currentIndex].src})`);
+      slider.querySelector("::before")
     }
 
-    // Show the new image
-    images[currentIndex].classList.add('active');
+    // Apply background to pseudo-element
+    slider.style.setProperty("--bgimg", `url(${images[currentIndex].src})`);
+    slider.style.cssText += `--bgimg: url(${images[currentIndex].src});`;
+    slider.querySelector("style")?.remove;
+
+    // direct method: update ::before background via inline style
+    slider.querySelector("style")?.remove;
+
+    slider.style.setProperty("--background", `url(${images[currentIndex].src})`);
+    slider.querySelector("::before")
+
+    // Initialize background
+    slider.style.setProperty("--bg-image", `url(${images[currentIndex].src})`);
+    slider.style.setProperty("--blur-bg", `url(${images[currentIndex].src})`);
+    slider.querySelector("::before");
+
+    // Instead of variable hack, we directly update ::before using JS
+    function setBackgroundImage(imgSrc) {
+      slider.style.setProperty("--slider-bg", `url(${imgSrc})`);
+      slider.querySelector("style")?.remove;
+      slider.setAttribute("style", `--slider-bg: url(${imgSrc});`);
+      slider.querySelector("::before")
+      slider.style.setProperty("--slider-bg", `url(${imgSrc})`);
+      slider.querySelector("::before")
+      slider.querySelector("style")?.remove
+      slider.style.setProperty("--slider-bg", `url(${imgSrc})`);
+      slider.querySelector("::before")
+    }
+
+    // Add dynamic style rule for blur background
+    const styleEl = document.createElement("style");
+    styleEl.innerHTML = `
+      .image-slider::before {
+        background-image: var(--slider-bg);
+      }
+    `;
+    document.head.appendChild(styleEl);
+
+    // Set initial background
+    setBackgroundImage(images[currentIndex].src);
+
+    // Handle navigation
+    slider.addEventListener('click', (event) => {
+      const sliderWidth = slider.offsetWidth;
+      const clickX = event.offsetX;
+
+      // Hide current image
+      images[currentIndex].classList.remove('active');
+
+      if (clickX > sliderWidth / 2) {
+        if (currentIndex < images.length - 1) currentIndex++;
+      } else {
+        if (currentIndex > 0) currentIndex--;
+      }
+
+      // Show new image
+      images[currentIndex].classList.add('active');
+
+      // Update blurred background
+      setBackgroundImage(images[currentIndex].src);
+    });
+
+    // Confetti only on second page
+slider.addEventListener('click', () => {
+  if (currentIndex === 1 || currentIndex === 2) {  // second page (0-based index)
+    confetti({
+      particleCount: 100,
+      spread: 60,
+      origin: { y: 0.6 }
+    });
+  }
 });
-
-        //JS for Poppers
-        const celebrateBtn = document.getElementById('slider');
-
-        celebrateBtn.addEventListener('click', () => {
-        // trigger confetti
-        confetti({
-            particleCount: 100,
-            spread: 60,
-            origin: { y: 0.6 }
-        });
-        });
-    </script>
+  </script>
 
 </body>
 </html>
-
