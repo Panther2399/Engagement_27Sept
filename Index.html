@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engagement Invitation</title>
+    <style>
+        /* Full-screen styling for the invitation */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f3ede4; /* Default background color */
+            transition: background-color 0.5s ease; /* Smooth transition for background color */
+        }
+        
+        /* Full-screen container for the images */
+        .image-slider {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Styling each image to fit the container without cropping */
+        .image-slider img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: opacity 0.7s ease;
+            opacity: 0;
+        }
+
+        /* Show the first image initially */
+        .image-slider img.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Image Slider -->
+    <div class="image-slider" id="slider">
+        <img src="1.png" alt="Wedding Invitation - First" class="active" data-bgcolor="#f4faf4" id="celebrateBtn">
+        <img src="2.png" alt="Wedding Invitation - Second" data-bgcolor="#f4faf4" id="celebrateBtn">
+        <img src="3.png" alt="Wedding Invitation - Third" data-bgcolor="#f4faf4" id="celebrateBtn">
+    </div>
+
+    <!-- Background Music -->
+    <audio id="background-music" src="path-to-your-music.mp3" autoplay loop></audio>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        // JavaScript to handle left/right click navigation in the slider
+const slider = document.getElementById('slider');
+const images = slider.querySelectorAll('img');
+let currentIndex = 0;
+
+slider.addEventListener('click', (event) => {
+    const sliderWidth = slider.offsetWidth;
+    const clickX = event.offsetX; // X position where user clicked
+
+    // Hide current image
+    images[currentIndex].classList.remove('active');
+
+    if (clickX > sliderWidth / 2) {
+        // Clicked on the right half → Next image
+        if (currentIndex < images.length - 1) {
+            currentIndex++;
+        }
+    } else {
+        // Clicked on the left half → Previous image
+        if (currentIndex > 0) {
+            currentIndex--;
+        }
+    }
+
+    // Show the new image
+    images[currentIndex].classList.add('active');
+});
+
+        //JS for Poppers
+        const celebrateBtn = document.getElementById('slider');
+
+        celebrateBtn.addEventListener('click', () => {
+        // trigger confetti
+        confetti({
+            particleCount: 100,
+            spread: 60,
+            origin: { y: 0.6 }
+        });
+        });
+    </script>
+
+</body>
+</html>
